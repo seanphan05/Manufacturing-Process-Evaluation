@@ -19,12 +19,17 @@ This is product quality data obtained during the manufacturing process. There ar
 3.	Algorithm and Techniques:
 
 4.	Methodology:
+
 4.1	Collecting data (step 1)
+
 4.2	Exploring and Preprocessing data (step 2)
+
 4.3	Implementation (step 3)
 
 5.	Result and Improvement:
+
 5.1	Model evaluation (step 4)
+
 5.2	Model improvement (step 5)
 
 6.	Conclusion:
