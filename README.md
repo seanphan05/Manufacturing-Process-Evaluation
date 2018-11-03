@@ -2,45 +2,49 @@
 
 1.	Introduction:
 
-The increasing global demand for goods and services has created a highly competitive market, making quality control testing and regulatory compliance across borders more necessary than ever. Manufacturers, regulatory authorities, trade groups, contractors, designers and sales organizations increasingly rely on third-party QA Testers to ensure that the products they receive, specify or use, comply with these requirements. Raw materials testing and samples of products selected during the manufacturing process confirms the quality of the product and allows any necessary changes to be addressed early on. Third-party testing can provide expert advice and guidance or assistance in developing specifications, relieving apprehension and leveraging expertise for quality control in manufacturing.
+With a highly competitive market due to the growth of global demand for goods and services, quality control becomes an essential and crucial part in any production process. To ensure that the products can be produced comply with strict requirements, manufacturers or regulatory authorities increasingly rely on several techniques during manufacturing process. One among of those is quality control products during manufacturing by classifying production outcome based upon input information in order to determine the quality of the product and allows any necessary changes to be addressed early on. To understand more deeply about manufacturing process and how quality control with classification can be applied in, let take a quick look at their definition and explanation.
 
-Manufacturing process:
-Manufacturing process is one of the important steps in production process. It mainly concerns with the change of form of material or dimensions of the part being produced. Transportation, handling or storage of parts does not comes under steps of manufacturing process, because these steps are not involved with the change of form of material or dimensions of the part being produced. The geometry of the finished product must have certain tolerances, that it must meet in order to be acceptable and being useful.
+What is manufacturing process? As a Wiki definition “Manufacturing engineering or manufacturing process are the steps through which raw materials are transformed into a final product. The manufacturing process begins with the product design, and materials specification from which the product is made. These materials are then modified through manufacturing processes to become the required part.”
 
-Manufacturing engineering or manufacturing process are the steps through which raw materials are transformed into a final product. The manufacturing process begins with the product design, and materials specification from which the product is made. These materials are then modified through manufacturing processes to become the required part.
-
-Manufacturing process evaluation:
+So, how does quality control in manufacturing process with classification work? Specifically, quality control in manufacturing process with classification is a simple approach to detect a good or bad quality of a batch production with historical data from similar previous batch production. These archived information included input raw material, ratio of raw material in use, or material brand names in last production process. The information then will be used  as a training data set to establish a model classifier. For each algorithms or techniques used in creating a classifier, the prediction output may be different. Particularly, in this project, we applied 4 different algorithms for classification. Details of these algorithms will be explained deeper in the next section Algorithms and Techniques. From now, the model classifier will be used in order to predict the quality of current batch production and provide or make appropriate decision for next stage in production process.
 
 
-2.	Data Description:
+2.	Algorithm and Techniques:
+
+2.1	Naive Bayes
+
+2.2	Decision Tree
+
+2.3	Support Vector Machine SVM
+
+2.4	Deep Learning Neural Network H2O
+
+3.	Methodology:
+
+3.1	Data description  (step 1)
 
 This is product quality data obtained during the manufacturing process. There are four CSV data files in it: 1) param_data_train, 2) param_data_test, 3) param_data_timevarying_train, and 4) param_data_timevarying_test. Your task is to use the test datasets to predict whether the product quality is good (1) or bad (0).
 
-3.	Algorithm and Techniques:
+3.2	Exploring and Preprocessing data (step 2)
 
-4.	Methodology:
+3.2.1	Data Visualization
 
-4.1	Collecting data (step 1)
+3.2.2	Data Preprocessing
 
-4.2	Exploring and Preprocessing data (step 2)
+3.3	Implementation (step 3)
 
-4.2.1 Data Visualization
+4.	Result and Improvement:
 
-4.2.2 Data Preprocessing
+4.1	Model evaluation (step 4)
 
-4.3	Implementation (step 3)
+4.2	Model improvement (step 5)
 
-5.	Result and Improvement:
-
-5.1	Model evaluation (step 4)
-
-5.2	Model improvement (step 5)
-
-6.	Conclusion:
+5.	Conclusion:
 
 
 
 Appendix
 
 Reference
+
 
