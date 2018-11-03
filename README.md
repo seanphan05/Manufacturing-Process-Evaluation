@@ -1,5 +1,15 @@
 # Quality Control in Manufacturing Process
 
+Executive Summary
+
+Objective
+
+Methods
+
+Finding (result)
+
+
+
 1.	Introduction:
 
 With a highly competitive market due to the growth of global demand for goods and services, quality control becomes an essential and crucial part in any production process. To ensure that the products can be produced comply with strict requirements, manufacturers or regulatory authorities increasingly rely on several techniques during manufacturing process. One among of those is quality control products during manufacturing by classifying production outcome based upon input information in order to determine the quality of the product and allows any necessary changes to be addressed early on. To understand more deeply about manufacturing process and how quality control with classification can be applied in, let take a quick look at their definition and explanation.
