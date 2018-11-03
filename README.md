@@ -35,7 +35,7 @@ This is product quality data obtained during the manufacturing process. There ar
 
 4.	Result and Improvement:
 
-4.1	Model evaluation (step 4)
+4.1	Model results and evaluation (step 4)
 
 4.2	Model improvement (step 5)
 
