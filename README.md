@@ -24,6 +24,10 @@ This is product quality data obtained during the manufacturing process. There ar
 
 4.2	Exploring and Preprocessing data (step 2)
 
+4.2.1 Data Visualization
+
+4.2.2 Data Preprocessing
+
 4.3	Implementation (step 3)
 
 5.	Result and Improvement:
