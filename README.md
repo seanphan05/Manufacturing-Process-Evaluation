@@ -11,6 +11,9 @@ Finding (result)
 
 
 
+
+
+
 1.	Introduction:
 
 With a highly competitive market due to the growth of global demand for goods and services, quality control becomes an essential and crucial part in any production process. To ensure that the products can be produced comply with strict requirements, manufacturers or regulatory authorities increasingly rely on several techniques during manufacturing process. One among of those is quality control products during manufacturing by classifying production outcome based upon input information in order to determine the quality of the product and allows any necessary changes to be addressed early on. To understand more deeply about manufacturing process and how quality control with classification can be applied in, let take a quick look at their definition and explanation.
@@ -26,7 +29,6 @@ As mentioned previously, we applied 4 common various algorithms to establish a m
 2.1	Naive Bayes
 
 Naive Bayes is a simple technique for constructing classifiers: models that assign class labels to problem instances, represented as vectors of feature values, where the class labels are drawn from some finite set. There is not a single algorithm for training such classifiers, but a family of algorithms based on a common principle: all naive Bayes classifiers assume that the value of a particular feature is independent of the value of any other feature, given the class variable.
-
 2.2	Decision Tree
 
 Decision tree learners are powerful classifiers, which utilize a tree structure to model the relationships among the features and the potential outcomes. A decision tree classifier uses a structure of branching decisions, which channel examples into a final predicted class value.
@@ -44,12 +46,12 @@ A Support Vector Machine (SVM) can be imagined as a surface that creates a bound
 H2O’s Deep Learning is based on a multi-layer feedforward artificial neural network that is trained with stochastic gradient descent using back-propagation. The network can contain a large number of hidden layers consisting of neurons with tanh, rectifier, and maxout activation functions.
 
 3.	Methodology:
+
 3.1	Data description  (step 1)
 
-This is product quality data obtained during the manufacturing process. There are two CSV data files in it: 1) param_data_train, 2) param_data_test. There is 12 features in training data set and similarly, 11 features in testing data set which lack of label feature. While training set contains num observations, testing set has num observations. Since data had been collected from company, all it information has been confidentially encoded for security purpose. 
+This product quality data had been collected during the manufacturing process. Data set includes two CSV data files in it: param_data_train and param_data_test. There are 12 features in training data set and similarly, 11 features in testing data set which lack of the  label feature. While training set contains 43,960 observations, testing set has 43,432 observations. Since data had been collected from company, all it information has been confidentially encoded for security purpose. 
 
 Features include product_no (number of batch product), label (good (1) or bad (0)), material A, material B, Brand Name, Material Size, Mix Proportion and some other numerical parameters. The purpose of this project is to create a model classifier and implement it on the test datasets to predict the product quality (predict quality label).
-
 
 3.2	Exploring and Preprocessing data (step 2)
 
@@ -57,7 +59,7 @@ Features include product_no (number of batch product), label (good (1) or bad (0
 
 3.2.2	Data Preprocessing
 
-Due to confidential issue existing in input data, our team decided to decode whole data sets. The aim is to make it more interpretable and accessible during training and processing data.
+Due to confidential issue existing in input data, our team decided to decode whole data sets. The aim is to make it more interpretable and accessible during training and processing data. Data, after that, will be imputed to tackle missing value issue, as well as normalized for before feed it into training stage.
 
 3.2.2.1	Data decoding:
 
@@ -65,15 +67,16 @@ We used unique() function to exam the number of different observations in each v
 
 3.2.2.2	Missing value imputation
 
-After doing several steps to determine the absence of value in data set, we figure out that missing value is presented in this input data and need to be tackle before using. We used missForest approach to overcome this issue include with ggplot missing value mapping.
+After doing several steps to determine the absence of values in data set, we figure out that missing value is presented in this input data and need to be tackle before using. We used missForest approach to overcome this issue together with ggplot to map the missing values.
  
 3.2.2.3	Splitting data
 
-In order to exam the performance and select the model with a best fit for our data, we decide to divide the training data into 2 subsets which will be sub training and sub testing data and establish a classifier on each algorithms for comparison. Which model yield the best accuracy will be used on input testing data. Data had been splitted with the portion of 75% for training and 25% for testing.
+In order to exam the performance and select the model with a best fit for our data, we decide to divide the training data into 2 subsets which will be sub training and sub testing data and establish a classifier on each algorithm for comparison. Which model yield the best accuracy will be used on input testing data. Data had been splitted with the portion of 75% for training and 25% for testing.
 
 3.2.2.4	Data normalization
 
-Both input training and testing data also need to be normalized before actually feeding into model classifier. We used min max method for our data set.
+Both input training and testing data also need to be normalized before actually feeding into model classifier. We used min-max method for our data set.
+
 
 
 3.3	Implementation (step 3)
