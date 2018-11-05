@@ -57,6 +57,25 @@ Features include product_no (number of batch product), label (good (1) or bad (0
 
 3.2.2	Data Preprocessing
 
+Due to confidential issue existing in input data, our team decided to decode whole data sets. The aim is to make it more interpretable and accessible during training and processing data.
+
+3.2.2.1	Data decoding:
+
+We used unique() function to exam the number of different observations in each variable. We then renamed all of those value into meaningful names corresponding to their labels. For instance, variable Material A contains 4 different type of materials need for production process, thus we renamed them as A1, A2, A3, and A4. Similarly to all other variables. We also converted some numerical variables which presented as a string data type, into numeric data type.
+
+3.2.2.2	Missing value imputation
+
+After doing several steps to determine the absence of value in data set, we figure out that missing value is presented in this input data and need to be tackle before using. We used missForest approach to overcome this issue include with ggplot missing value mapping.
+ 
+3.2.2.3	Splitting data
+
+In order to exam the performance and select the model with a best fit for our data, we decide to divide the training data into 2 subsets which will be sub training and sub testing data and establish a classifier on each algorithms for comparison. Which model yield the best accuracy will be used on input testing data. Data had been splitted with the portion of 75% for training and 25% for testing.
+
+3.2.2.4	Data normalization
+
+Both input training and testing data also need to be normalized before actually feeding into model classifier. We used min max method for our data set.
+
+
 3.3	Implementation (step 3)
 
 4.	Result and Improvement:
