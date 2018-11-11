@@ -28,7 +28,8 @@ As mentioned previously, we applied 4 common various algorithms to establish a m
 
 2.1	Naive Bayes
 
-Naive Bayes is a simple technique for constructing classifiers: models that assign class labels to problem instances, represented as vectors of feature values, where the class labels are drawn from some finite set. There is not a single algorithm for training such classifiers, but a family of algorithms based on a common principle: all naive Bayes classifiers assume that the value of a particular feature is independent of the value of any other feature, given the class variable.
+Naive Bayes is a simple technique for constructing classifiers: models that assign class labels as vectors of feature values. These class labels are corresponding to those drawn from training set. The classifiers are a gathering of many algorithms which based on same common principle: all naive Bayes classifiers assume that all value of features are separately independent from each other, given the class variable.
+
 2.2	Decision Tree
 
 Decision tree learners are powerful classifiers, which utilize a tree structure to model the relationships among the features and the potential outcomes. A decision tree classifier uses a structure of branching decisions, which channel examples into a final predicted class value.
@@ -39,17 +40,17 @@ There are numerous implementations of decision trees, but one of the most well-k
 
 2.3	Support Vector Machine
 
-A Support Vector Machine (SVM) can be imagined as a surface that creates a boundary between points of data plotted in multidimensional that represent examples and their feature values. The goal of a SVM is to create a flat boundary called a hyperplane, which divides the space to create fairly homogeneous partitions on either side. SVMs use a boundary called a hyperplane to partition data into groups of similar class values.
+A Support Vector Machine (SVM) can be imagined as a surface that creates a boundary between points of data plotted in multidimensional that represent examples and their feature values. To partition data into groups of similar class values, SVMs use a flat boundary called a hyperplane, which divides the space to create fairly homogeneous partitions on either side. 
 
 2.4	Deep Learning Neural Network H2O
 
-H2O’s Deep Learning is based on a multi-layer feedforward artificial neural network that is trained with stochastic gradient descent using back-propagation. The network can contain a large number of hidden layers consisting of neurons with tanh, rectifier, and maxout activation functions.
+H2O’s Deep Learning is based on a multi-layer feedforward artificial neural network that is trained with stochastic gradient descent using back-propagation. The network can contain a large number of hidden layers consisting of neurons with tanh, rectifier, and maxout activation functions. In our project, we also split out data to create validation set during training process.
 
 3.	Methodology:
 
 3.1	Data description  (step 1)
 
-This product quality data had been collected during the manufacturing process. Data set includes two CSV data files in it: param_data_train and param_data_test. There are 12 features in training data set and similarly, 11 features in testing data set which lack of the  label feature. While training set contains 43,960 observations, testing set has 43,432 observations. Since data had been collected from company, all it information has been confidentially encoded for security purpose. 
+This product quality data had been collected during the manufacturing process. Data set includes two CSV data files: param_data_train and param_data_test. There are 12 features in training data set and similarly, 11 features in testing data set for lack of the label feature. While training set contains 43,960 observations, testing set has 43,432 observations. Since data had been collected from company, all it information has been confidentially encoded for security purpose. 
 
 Features include product_no (number of batch product), label (good (1) or bad (0)), material A, material B, Brand Name, Material Size, Mix Proportion and some other numerical parameters. The purpose of this project is to create a model classifier and implement it on the test datasets to predict the product quality (predict quality label).
 
@@ -71,11 +72,12 @@ After doing several steps to determine the absence of values in data set, we fig
  
 3.2.2.3	Splitting data
 
-In order to exam the performance and select the model with a best fit for our data, we decide to divide the training data into 2 subsets which will be sub training and sub testing data and establish a classifier on each algorithm for comparison. Which model yield the best accuracy will be used on input testing data. Data had been splitted with the portion of 75% for training and 25% for testing.
+In order to exam the performance and select the model with a best fit for our data, we decide to divide the training data into 2 subsets which will be sub training and sub testing data and establish a classifier on each algorithm for comparison. Which model yield the best accuracy will be used on input testing data. Data had been split with the portion of 75% for training and 25% for testing.
 
 3.2.2.4	Data normalization
 
 Both input training and testing data also need to be normalized before actually feeding into model classifier. We used min-max method for our data set.
+
 
 
 
