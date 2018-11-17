@@ -1,9 +1,8 @@
 # load dataset
-#Duy adds stg
-#install.packages("data.table")
+install.packages("data.table")
 library(data.table)
 train.data <- fread("param_data_train.csv", header = TRUE)
-#ABCXYZ123
+
 ###########################################################################################
 ###################################Data Modification#######################################
 
