@@ -83,6 +83,10 @@ Both input training and testing data also need to be normalized before actually 
 
 3.3	Implementation (step 3)
 
+We used 4 common approaches (Naive Bayes, Decision Tree C5.0, Support Vector Machine SVM, and Deep Learning Neural Network H2O) for classification.
+
+product_model <- lm(Labels ~ MaterialsA + MaterialsB + BrandName + param1 + MaterialSize+param2+param3+param4+param5+MixProportion,
+                data = train.data2)
 4.	Result and Improvement:
 
 4.1	Model results and evaluation (step 4)
