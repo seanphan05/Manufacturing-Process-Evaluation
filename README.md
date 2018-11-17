@@ -90,6 +90,14 @@ product_model <- lm(Labels ~ MaterialsA + MaterialsB + BrandName + param1 + Mate
 4.	Result and Improvement:
 
 4.1	Model results and evaluation (step 4)
+To evaluate the algorithm performance, I showed the prediction that the algorithm produced and Calculate the Accuracy of the predictions.
+To calculate different metrics used for evaluation of classification, I would like introduce other measures:
+1) True Positive (TP) present the average of the vectors that are correctly predicted relevant obtained in each iteration
+2) True Negative (TN) present the average of the vectors that are correctly predicted as not relevant obtained in each iteration
+3) False Positive (FP) present the average of the vectors that are predicted relevant but they are not relevant obtained in each iteration
+4) False Negative (FN) present the average of the vectors that are correctly predicted not relevant but they are
+relevant obtained in each iteration
+Accuracy = (TP + TN)/ (TN + TP + FN + FP)
 
 4.2	Model improvement (step 5)
 
