@@ -1,12 +1,12 @@
-source("D://Capstone/utils.R")
+source("utils.R")
 
 # load dataset
-# install.packages("data.table")
+#install.packages("data.table")
 library(data.table)
 
-train.data <- fread("D:/Capstone/dataset/param_data_train.csv", header = TRUE)
+train.data <- fread("param_data_train.csv", header = TRUE)
 head(train.data)
-test.data <- fread("D://Capstone/dataset/param_data_test.csv", header = TRUE)
+test.data <- fread("param_data_test.csv", header = TRUE)
 head(test.data)
 ###########################################################################################
 ###################################Data Modification#######################################
@@ -140,7 +140,7 @@ ggplotMissingData(train.data)
 sapply(train.data, function(x) sum(is.na(x)))
 
 # imputation for missing values
-new.train.data <- imputeMissingData(train.data)
+new.train.data <- imputeMissingValues(train.data)
 sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
 # map mising values using the function
 ggplot_missing(new.train.data)
