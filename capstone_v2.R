@@ -78,18 +78,13 @@ unique(test.data$MixProportion)
 train.data$MaterialA = factorMaterialA(train.data$MaterialA)
 train.data$MaterialB = factorMaterialB(train.data$MaterialB)
 train.data$BrandName = factorBrandName(train.data$BrandName)
-train.data$MaterialSize = ifelse(train.data$MaterialSize=="0.115*600",0.115*600,
-                                 ifelse(train.data$MaterialSize=="0.115*720",0.115*720,
-                                        ifelse(train.data$MaterialSize=="0.115*580",0.115*580,
-                                               ifelse(train.data$MaterialSize=="0.115*620",0.115*620,0.115*300))))
-
+train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
+  
 test.data$MaterialA = factorMaterialA(test.data$MaterialA)
 test.data$MaterialB = factorMaterialB(test.data$MaterialB)
 test.data$BrandName = factorBrandName(test.data$BrandName)
-test.data$MaterialSize = ifelse(test.data$MaterialSize=="0.115*600",0.115*600,
-                                ifelse(test.data$MaterialSize=="0.115*580",0.115*580,
-                                       ifelse(test.data$MaterialSize=="0.115*300",0.115*300,0.115*720)))
-
+test.data$MaterialSize = factorMaterialSize(test.data$MaterialSize)
+  
 # convert all missing values into NAs in training data
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
@@ -143,7 +138,7 @@ sapply(train.data, function(x) sum(is.na(x)))
 new.train.data <- imputeMissingValues(train.data)
 sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
 # map mising values using the function
-ggplot_missing(new.train.data)
+ggplotMissingData(new.train.data)
 
 ########## handle missing values ##########
 ###########################################
@@ -164,7 +159,7 @@ summary(scaled.train)
 
 # PARTITION TRAINING DATA
 # Split the training data into training and testing data
-install.packages("caret")
+# install.packages("caret")
 library(caret)
 # Set random seed for replication
 set.seed(200)
@@ -185,7 +180,7 @@ splited.train2 <- scaled.train[-TrainingDataIndex,]
 ##################################### Neural Network ########################################
 
 # Neural Network Model with h2o method
-install.packages("h2o")
+# install.packages("h2o")
 library(h2o)
 
 # Start up a 8-node H2O server on local machine, 
@@ -232,7 +227,7 @@ length(dl.result$predict[dl.result$predict=="1"])*100/length(dl.result$predict)
 
 dl.result
 # Confusion Matrix
-install.packages("gmodels")
+# install.packages("gmodels")
 library(gmodels)
 CrossTable(splited.train2$Label, dl.result$predict,
            prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,

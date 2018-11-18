@@ -52,11 +52,11 @@ factorMaterialSize <- function(data) {
     "0.115*300"
   ),
   labels = c(
-    0.115*600,
-    0.115*720,
-    0.115*580,
-    0.115*620,
-    0.115*300
+    "0.115*600",
+    "0.115*720",
+    "0.115*580",
+    "0.115*620",
+    "0.115*300"
   ))
   return (labeled_data)
 }
@@ -64,8 +64,8 @@ factorMaterialSize <- function(data) {
 normalizeData <- function(data) {
   # Nomalization
   normalize <- function(x) {return((x - min(x)) / (max(x) - min(x)))}
-  nom.train <- lapply(data[,6:11],normalize)
-  scaled.data <- data.frame(data[2],nom.train,data[,13:25])
+  nom.train <- lapply(data[,c(6,8:11)],normalize)
+  scaled.data <- data.frame(data[2],nom.train,data[,13:29])
   summary(scaled.data)
   
   return (scaled.data)
@@ -92,9 +92,13 @@ processNominalVars <- function(data) {
   # 2 dummies variable for 3 type of MixProduction
   processed.data$Mix40.60 <- ifelse(processed.data$MixProportion=="40-60",1,0)
   processed.data$Mix50.50 <- ifelse(processed.data$MixProportion=="50-50",1,0)
+  # 4 dummy variables for 5 type of MaterialSize
+  processed.data$s600 <- ifelse(processed.data$MaterialSize=="0.115*600",1,0)
+  processed.data$s720 <- ifelse(processed.data$MaterialSize=="0.115*720",1,0)
+  processed.data$s580 <- ifelse(processed.data$MaterialSize=="0.115*580",1,0)
+  processed.data$s620 <- ifelse(processed.data$MaterialSize=="0.115*620",1,0)
   
   summary(processed.data)
-  summary(processed.data[,6:11])
   
   return (processed.data)
 }
