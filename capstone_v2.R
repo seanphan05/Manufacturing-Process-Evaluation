@@ -1,6 +1,6 @@
 source("utils.R")
 
-# load dataset
+# Load datasets
 #install.packages("data.table")
 library(data.table)
 
@@ -13,83 +13,23 @@ head(test.data)
 
 #########################################
 ########## processing raw data ##########
-# remove blank colums
+
+# Remove blank columns
 train.data <- train.data[,(13:15):= NULL]
 
-# change parameters column' name
-# in train data
-names(train.data)[1]<-"ProductNo"
-names(train.data)[2]<-"Label"
-names(train.data)[3]<-"MaterialA"
-names(train.data)[4]<-"MaterialB"
-names(train.data)[5]<-"BrandName"
-names(train.data)[6]<-"Param1"
-names(train.data)[7]<-"MaterialSize"
-names(train.data)[8]<-"Param2"
-names(train.data)[9]<-"Param3"
-names(train.data)[10]<-"Param4"
-names(train.data)[11]<-"Param5"
-names(train.data)[12]<-"MixProportion"
-head(train.data)
+# Change columns' name
+train.data = renameCols(train.data)
+test.data = renameCols(test.data)
 
-# in test data
-names(test.data)[1]<-"ProductNo"
-names(test.data)[2]<-"MaterialA"
-names(test.data)[3]<-"MaterialB"
-names(test.data)[4]<-"BrandName"
-names(test.data)[5]<-"Param1"
-names(test.data)[6]<-"MaterialSize"
-names(test.data)[7]<-"Param2"
-names(test.data)[8]<-"Param3"
-names(test.data)[9]<-"Param4"
-names(test.data)[10]<-"Param5"
-names(test.data)[11]<-"MixProportion"
-head(test.data)
+# Check the unique items in dataset
+sapply(train.data, function(x) unique(x))
+sapply(test.data, function(x) unique(x))
 
-# check the unique items in dataset
-# in train data
-unique(train.data$ProductNo)
-unique(train.data$Label) 
-unique(train.data$MaterialA)
-unique(train.data$MaterialB)
-unique(train.data$BrandName)
-unique(train.data$Param1)
-unique(train.data$MaterialSize)
-unique(train.data$Param2)
-unique(train.data$Param3)
-unique(train.data$Param4)
-unique(train.data$Param5)
-unique(train.data$MixProportion)
+# Factor nominal variables
+train.data = factorData(train.data)
+test.data = factorData(test.data)                            
 
-# in test data
-unique(test.data$ProductNo)
-unique(test.data$MaterialA)
-unique(test.data$MaterialB)
-unique(test.data$BrandName)
-unique(test.data$Param1)
-unique(test.data$MaterialSize)
-unique(test.data$Param2)
-unique(test.data$Param3)
-unique(test.data$Param4)
-unique(test.data$Param5)
-unique(test.data$MixProportion)
-
-                            
-train.data$MaterialA = factorMaterialA(train.data$MaterialA)
-train.data$MaterialB = factorMaterialB(train.data$MaterialB)
-train.data$BrandName = factorBrandName(train.data$BrandName)
-train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
-  
-test.data$MaterialA = factorMaterialA(test.data$MaterialA)
-test.data$MaterialB = factorMaterialB(test.data$MaterialB)
-test.data$BrandName = factorBrandName(test.data$BrandName)
-test.data$MaterialSize = factorMaterialSize(test.data$MaterialSize)
-  
-# convert all missing values into NAs in training data
-train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
-test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
-
-# verify data
+# Verify data
 unique(train.data$MaterialA)
 unique(train.data$MaterialB)
 unique(train.data$BrandName)
@@ -102,33 +42,25 @@ unique(test.data$BrandName)
 unique(test.data$MaterialSize)
 unique(test.data$MixProportion)
 
-length(which(train.data$MaterialA=="A1"))
-length(which(train.data$MaterialA=="A2"))
-length(which(train.data$MaterialA=="A3"))
-length(which(train.data$MaterialA=="A4"))
+str(train.data)
+str(test.data)
 
 ########### processing raw data ##########
 ##########################################
 
-
 ##########################################
-########## handle missing values #########
-
-# set categorical attributes as factor for training data
-train.data$ProductNo <- as.factor(train.data$ProductNo)
-train.data$MaterialA <- as.factor(train.data$MaterialA)
-train.data$MaterialB <- as.factor(train.data$MaterialB)
-train.data$BrandName <- as.factor(train.data$BrandName)
-train.data$MixProportion <- as.factor(train.data$MixProportion)
+########## handle missing values ########## 
 
 
-# ggplot_missing funtion to map missing values
+# Use ggplot_missing funtion to map missing values
 #install.packages("reshape2")
 #install.packages("dplyr")
 #install.packages("ggplot2")
+#install.packages("missForest")
 library(reshape2)
 library(dplyr)
 library(ggplot2)
+library(missForest)
 
 # map mising values using the function
 ggplotMissingData(train.data)
