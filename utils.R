@@ -1,3 +1,4 @@
+
 factorMaterialA <- function(data) {
   labeled_data = factor(data, levels = c(
     "75a5f96063fbc3290b07b0e81c3249d0",
@@ -61,25 +62,16 @@ factorMaterialSize <- function(data) {
   return (labeled_data)
 }
 
-normalizeData <- function(data) {
-  # Nomalization
-  normalize <- function(x) {return((x - min(x)) / (max(x) - min(x)))}
-  nom.train <- lapply(data[,c(6,8:11)],normalize)
-  scaled.data <- data.frame(data[2],nom.train,data[,13:29])
-  summary(scaled.data)
-  
-  return (scaled.data)
-}
-
 processNominalVars <- function(data) {
   processed.data <- data
-  #convert Label column into factor
-  processed.data$Label <- as.factor(processed.data$Label)
-  # 3 dummies variable for 4 type of materialsA
+  # convert Label column into factor
+  if (length(processed.data)==12) {processed.data$Label <- as.factor(processed.data$Label)}
+  # 4 dummy variables for 5 type of materialsA
   processed.data$A1 <- ifelse(processed.data$MaterialA=="A1",1,0)
   processed.data$A2 <- ifelse(processed.data$MaterialA=="A2",1,0)
   processed.data$A3 <- ifelse(processed.data$MaterialA=="A3",1,0)
-  # 7 dummies variable for 8 type of materialsB
+  processed.data$A4 <- ifelse(processed.data$MaterialA=="A4",1,0)
+  # 10 dummies variable for 11 type of materialsB
   processed.data$B1 <- ifelse(processed.data$MaterialB=="B1",1,0)
   processed.data$B2 <- ifelse(processed.data$MaterialB=="B2",1,0)
   processed.data$B3 <- ifelse(processed.data$MaterialB=="B3",1,0)
@@ -87,10 +79,12 @@ processNominalVars <- function(data) {
   processed.data$B5 <- ifelse(processed.data$MaterialB=="B5",1,0)
   processed.data$B6 <- ifelse(processed.data$MaterialB=="B6",1,0)
   processed.data$B7 <- ifelse(processed.data$MaterialB=="B7",1,0)
+  processed.data$B8 <- ifelse(processed.data$MaterialB=="B8",1,0)
+  processed.data$B9 <- ifelse(processed.data$MaterialB=="B9",1,0)
+  processed.data$B10 <- ifelse(processed.data$MaterialB=="B10",1,0)
   # 1 dummy variable for 2 type of BrandName
   processed.data$BN1 <- ifelse(processed.data$BrandName=="BrandName1",1,0)
-  # 2 dummies variable for 3 type of MixProduction
-  processed.data$Mix40.60 <- ifelse(processed.data$MixProportion=="40-60",1,0)
+  # 1 dummy variable for 2 type of MixProduction
   processed.data$Mix50.50 <- ifelse(processed.data$MixProportion=="50-50",1,0)
   # 4 dummy variables for 5 type of MaterialSize
   processed.data$s600 <- ifelse(processed.data$MaterialSize=="0.115*600",1,0)
@@ -99,7 +93,6 @@ processNominalVars <- function(data) {
   processed.data$s620 <- ifelse(processed.data$MaterialSize=="0.115*620",1,0)
   
   summary(processed.data)
-  
   return (processed.data)
 }
 
@@ -121,4 +114,63 @@ imputeMissingValues <- function(data) {
   data.imp$ximp
   new.data <- data.frame(data$ProductNo, data.imp$ximp)
   return (new.data)
+}
+
+featureMatch <- function(data)
+{ # start featureMatch
+  
+  # Match MaterialA Feature:
+{
+  if (length(data)==12) {
+    index.A5 <- which(data$MaterialA=="A4")
+    data$MaterialA[index.A5[1:144]] <- "A5"}
+  else {
+    index.A4 <- which(data$MaterialA=="A5")
+    data$MaterialA[index.A4[1:32]] <- "A4" }
+}
+
+# Match MaterialB Feature:
+{
+  if (length(data)==12) {
+    index.B <- which(data$MaterialB=="B8")
+    data$MaterialB[index.B[133:264]] <- "B9"
+    data$MaterialB[index.B[265:396]] <- "B10"
+    data$MaterialB[index.B[397:528]] <- "B11" }
+}
+# Match MixProduction Feature:
+{  
+  if (length(data)==12) {
+    data$MixProportion <- as.character(data$MixProportion)
+    data$MixProportion[which(data$MixProportion=="41-59")] <- "40-60" 
+    data$MixProportion <- as.factor(data$MixProportion) 
+    }
+  else {
+    data$MixProportion <- as.character(data$MixProportion)
+    data$MixProportion[which(data$MixProportion=="45-55")] <- "40-60" 
+    data$MixProportion <- as.factor(data$MixProportion) }
+}
+# Match MaterialSize Feature:
+{
+  if (length(data)==11) {
+    index.s620 <- which(data$MaterialSize=="0.115*300")
+    data$MaterialSize[index.s620[1:236]] <- "0.115*620"
+  }
+}
+  
+  return(data)
+} # End featureMatch
+
+normalizeData <- function(data) {
+  # Nomalization
+  normalize <- function(x) {return((x - min(x)) / (max(x) - min(x)))}
+  if (length(data)==32) {
+    nom.train <- lapply(data[c(6,8:11)],normalize)
+    scaled.data <- data.frame(data[2],nom.train,data[,13:32])
+    summary(scaled.data)
+    return (scaled.data) }
+  else {
+    nom.test <- lapply(data[c(5,7:10)],normalize)
+    scaled.data <- data.frame(nom.test,data[,12:31])
+    summary(scaled.data)
+    return (scaled.data) }
 }
