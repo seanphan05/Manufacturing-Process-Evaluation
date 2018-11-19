@@ -91,8 +91,9 @@ summary(scaled.train)
 
 # PARTITION TRAINING DATA
 # Split the training data into training and testing data
-# install.packages("caret")
+#install.packages("caret")
 library(caret)
+
 # Set random seed for replication
 set.seed(200)
 # Lets do stratified sampling. Select rows to based on Class variable as strata
@@ -112,7 +113,7 @@ splited.train2 <- scaled.train[-TrainingDataIndex,]
 ##################################### Neural Network ########################################
 
 # Neural Network Model with h2o method
-# install.packages("h2o")
+install.packages("h2o")
 library(h2o)
 
 # Start up a 8-node H2O server on local machine, 
@@ -141,6 +142,11 @@ plot(dl.model)
 dl.model.predict <- h2o.predict(dl.model, test.hex)
 dl.result <- as.data.frame(dl.model.predict)
 dl.result
+
+# Measure performance of H20 DL model
+perf <- h2o.performance(dl.model, test.hex)
+h2o.confusionMatrix(perf)
+
 h2o.shutdown()
 
 # examine the dl.result
