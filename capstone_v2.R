@@ -74,17 +74,23 @@ unique(test.data$Param4)
 unique(test.data$Param5)
 unique(test.data$MixProportion)
 
-                            
+
+# convert all categorical columns into factors and create dummy variables
+# for training data set
 train.data$MaterialA = factorMaterialA(train.data$MaterialA)
 train.data$MaterialB = factorMaterialB(train.data$MaterialB)
 train.data$BrandName = factorBrandName(train.data$BrandName)
 train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
-  
+train.data$ProductNo <- as.factor(train.data$ProductNo)
+train.data$MixProportion <- as.factor(train.data$MixProportion)
+# for testing data set
 test.data$MaterialA = factorMaterialA(test.data$MaterialA)
 test.data$MaterialB = factorMaterialB(test.data$MaterialB)
 test.data$BrandName = factorBrandName(test.data$BrandName)
 test.data$MaterialSize = factorMaterialSize(test.data$MaterialSize)
-  
+test.data$ProductNo <- as.factor(test.data$ProductNo)
+test.data$MixProportion <- as.factor(test.data$MixProportion)
+
 # convert all missing values into NAs in training data
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
@@ -114,14 +120,6 @@ length(which(train.data$MaterialA=="A4"))
 ##########################################
 ########## handle missing values #########
 
-# set categorical attributes as factor for training data
-train.data$ProductNo <- as.factor(train.data$ProductNo)
-train.data$MaterialA <- as.factor(train.data$MaterialA)
-train.data$MaterialB <- as.factor(train.data$MaterialB)
-train.data$BrandName <- as.factor(train.data$BrandName)
-train.data$MixProportion <- as.factor(train.data$MixProportion)
-
-
 # ggplot_missing funtion to map missing values
 #install.packages("reshape2")
 #install.packages("dplyr")
@@ -133,12 +131,19 @@ library(ggplot2)
 # map mising values using the function
 ggplotMissingData(train.data)
 sapply(train.data, function(x) sum(is.na(x)))
+ggplotMissingData(test.data)
+sapply(test.data,function(x) sum(is.na(x)))
 
 # imputation for missing values
 new.train.data <- imputeMissingValues(train.data)
 sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
+new.test.data <- imputeMissingValues(test.data)
+sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
+
+
 # map mising values using the function
 ggplotMissingData(new.train.data)
+ggplotMissingData(new.test.data)
 
 ########## handle missing values ##########
 ###########################################
@@ -151,14 +156,19 @@ ggplotMissingData(new.train.data)
 ################################### Data Preparation ######################################
 
 # create dummies variables for categorical attributes
-# for train data
 
 processed.train = processNominalVars(new.train.data)
 scaled.train = normalizeData(processed.train)
 summary(scaled.train)
 
-# PARTITION TRAINING DATA
-# Split the training data into training and testing data
+processed.test = processNominalVars(new.test.data)
+scaled.test = normalizeData(processed.test)
+summary(scaled.test)
+
+
+
+# PARTITION FOR TRAINING DATA ONLY
+# Split the training data into training set and testing set
 # install.packages("caret")
 library(caret)
 # Set random seed for replication
@@ -169,12 +179,11 @@ TrainingDataIndex <- createDataPartition(scaled.train$Label, p=0.75, list=FALSE)
 splited.train1 <- scaled.train[TrainingDataIndex,]
 # Everything else not in training is test data. 
 splited.train2 <- scaled.train[-TrainingDataIndex,]
-# END: PARTITION TRAINING DATA
+# END: PARTITION FOR TRAINING DATA
 
 
 ##################################### Data Preparation ######################################
 #############################################################################################
-
 
 #############################################################################################
 ##################################### Neural Network ########################################
@@ -196,7 +205,7 @@ splits <- h2o.splitFrame(train.hex, 0.8, seed=777)
 split.train  <- h2o.assign(splits[[1]], "train.hex") # 80%
 split.valid  <- h2o.assign(splits[[2]], "valid.hex") # 20%
 
-dl.model <- h2o.deeplearning(x=2:20,
+dl.model <- h2o.deeplearning(x=2:23,
                              y="Label",
                              training_frame=split.train,
                              validation_frame=split.valid,
@@ -221,11 +230,6 @@ summary(dl.result)
 # List the important variables
 head(as.data.frame(h2o.varimp(dl.model)))
 
-# Percentage of good quality prediction
-length(dl.result$predict[dl.result$predict=="1"])*100/length(dl.result$predict)
-################### Method: h2o #####################
-
-dl.result
 # Confusion Matrix
 # install.packages("gmodels")
 library(gmodels)
@@ -239,13 +243,14 @@ nn.accuracy
 
 ##################################### Neural Network ########################################
 #############################################################################################
+
 #############################################################################################
 ###################################### Naive Bayes ##########################################
 
 splited.train1$Label <- factor(splited.train1$Label)
 splited.train2$Label <- factor(splited.train2$Label)
 
-install.packages("e1071")
+# install.packages("e1071")
 library(e1071)
 nb.classifier <- naiveBayes(splited.train1, splited.train1$Label)
 
@@ -265,11 +270,12 @@ nb.accuracy
 
 ###################################### Naive Bayes ##########################################
 #############################################################################################
+
 #############################################################################################
 #################################### Decision Tree ##########################################
 
 # Modeling data with decision tree using c50
-install.packages("C50")
+# install.packages("C50")
 library(C50)
 dt.classifier <- C5.0(splited.train1[-1], splited.train1$Label)
 
@@ -289,12 +295,12 @@ dt.accuracy
 
 #################################### Decision Tree ##########################################
 #############################################################################################
+
 #############################################################################################
 ######################################## SVM ################################################
-
 # modeling the data with svm() 
 library(e1071)
-svm.classifier <- svm(Labels~.,data=splited.train1)
+svm.classifier <- svm(Label~.,data=splited.train1, scale=FALSE)
 
 # generate predictions for the testing dataset
 svm.predict <- predict(svm.classifier, splited.train2)
@@ -302,12 +308,12 @@ summary(svm.predict)
 
 # cross tabulation of predicted versus actual classes
 library(gmodels)
-CrossTable(splited.train2$Labels, svm.predict,
+CrossTable(splited.train2$Label, svm.predict,
            prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
            dnn = c('actual', 'predicted'))
 
 # accuracy
-table.svm <- table(splited.train2$Labels, svm.predict)
+table.svm <- table(splited.train2$Label, svm.predict)
 svm.accuracy = round(sum(diag(table.svm)/sum(table.svm)),digits=5)
 svm.accuracy
 ######################################## SVM ################################################
@@ -321,112 +327,63 @@ com.table
 
 #################################################################
 #                                                               #
-#      Use Naive Bayes Algorithm to apply on test data          #                                                                                                                          
+#                       Apply on test data                      #                                                                                                                          
 #                                                               #
 #################################################################
 
-# set categorical attributes as factor for training data
-test.data$ProductNo <- as.factor(test.data$ProductNo)
-test.data$MaterialA <- as.factor(test.data$MaterialA)
-test.data$MaterialB <- as.factor(test.data$MaterialB)
-test.data$BrandName <- as.factor(test.data$BrandName)
-test.data$MixProportion <- as.factor(test.data$MixProportion)
-
-# ggplot_missing funtion to map missing values
-library(reshape2)
-library(dplyr)
-library(ggplot2)
-ggplot_missing <- function(x){
-  x %>% is.na %>% melt %>% ggplot(data = ., aes(x = Var2, y = Var1)) +
-    geom_raster(aes(fill = value)) +
-    scale_fill_grey (name = '', labels = c('Present', 'Missing')) +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) +
-    labs(x = 'Variables on Dataset', y = 'Rows / Observations')
-}
-
-# map mising values using the function
-ggplotMissingData(test.data)
-sapply(test.data,function(x) sum(is.na(x)))
-
-# imputation for missing values
-# map mising values using the function
-ggplotMissingData(test.data)
-sapply(train.data, function(x) sum(is.na(x)))
-
-# imputation for missing values
-new.test.data <- imputeMissingData(test.data)
-sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
-# map mising values using the function
-ggplot_missing(new.test.data)
-
 ##########################################################################################
-############################# Preparing testing data #####################################
-
-# create dummies variables for categorical attributes using one-hot encoding
-
-processed.test = processNominalVars(new.test.data)
-scaled.test.data = normalizeData(processed.test)
-summary(scaled.test.data)
-
-############################# Preparing testing data #####################################
-##########################################################################################
-
 ######################### Apply Naive Bayes algorithm ####################################
-scaled.train.data <- scaled.train
-scaled.train.data$Labels <- factor(scaled.train.data$Labels)
 
 library(e1071)
-nb.classifier.data <- naiveBayes(scaled.train.data, scaled.train.data$Labels)
+nb.classifier.data <- naiveBayes(scaled.train, scaled.train$Label)
 
-nb.predict.data <- predict(nb.classifier.data, scaled.test.data)
+nb.predict.data <- predict(nb.classifier.data, scaled.test)
 summary(nb.predict.data)
 
 # Percentage of good quality prediction
 length(which(nb.predict.data=="1"))*100/length(nb.predict.data)
 
-
+#########################################################################################
 ######################### Apply SVM algorithm ###########################################
 # modeling the data with svm() 
 library(e1071)
-svm.classifier.data <- svm(Labels~.,data=scaled.train.data)
+svm.classifier.data <- svm(Label~.,data=scaled.train, scale=FALSE)
 
 # generate predictions for the testing dataset
-svm.predict.data <- predict(svm.classifier.data, scaled.test.data)
+svm.predict.data <- predict(svm.classifier.data, scaled.test)
 summary(svm.predict.data)
 
 # Percentage of good quality prediction
 length(which(svm.predict.data=="1"))*100/length(svm.predict.data)
 
-
-
-
-
+########################################################################################
 ######################### Apply Decision Tree algorithm ################################
 # Modeling data with decision tree using c50
 library(C50)
-dt.classifier.data <- C5.0(scaled.train.data[-1], scaled.train.data$Labels)
+dt.classifier.data <- C5.0(scaled.train[-1], scaled.train$Label)
 
 # generate predictions for the testing dataset
-dt.predict.data <- predict(dt.classifier.data, scaled.test.data)
-
+dt.predict.data <- predict(dt.classifier.data, scaled.test)
+summary(dt.predict.data)
 # Percentage of good quality prediction
 length(which(dt.predict.data=="1"))*100/length(dt.predict.data)
 
+##########################################################################################
+######################### Apply Deep Learning Neural Network H2O #########################
 library(h2o)
 h2o.init(nthreads=8, max_mem_size="2G")
 h2o.removeAll() ## clean slate - just in case the cluster was already running
 h2o.init()
 
 # split train data for validation
-train.hex <- as.h2o(scaled.train.data)
-test.hex <- as.h2o(scaled.test.data)
+train.hex <- as.h2o(scaled.train)
+test.hex <- as.h2o(scaled.test)
 
 splits <- h2o.splitFrame(train.hex, 0.8, seed=777)
 split.train  <- h2o.assign(splits[[1]], "train.hex") # 80%
 split.valid  <- h2o.assign(splits[[2]], "valid.hex") # 20%
 
-dl.model <- h2o.deeplearning(x=2:20,
+dl.model <- h2o.deeplearning(x=2:23,
                              y="Labels",
                              training_frame=split.train,
                              validation_frame=split.valid,
@@ -442,6 +399,3 @@ h2o.shutdown()
 
 # examine the dl.result
 summary(dl.result.data)
-
-# Percentage of good quality prediction
-length(dl.result.data$predict[dl.result.data$predict=="1"])*100/length(dl.result.data$predict)
