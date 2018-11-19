@@ -1,6 +1,6 @@
 source("utils.R")
 
-# load dataset
+# Load datasets
 #install.packages("data.table")
 library(data.table)
 
@@ -13,66 +13,17 @@ head(test.data)
 
 #########################################
 ########## processing raw data ##########
-# remove blank colums
+
+# Remove blank columns
 train.data <- train.data[,(13:15):= NULL]
 
-# change parameters column' name
-# in train data
-names(train.data)[1]<-"ProductNo"
-names(train.data)[2]<-"Label"
-names(train.data)[3]<-"MaterialA"
-names(train.data)[4]<-"MaterialB"
-names(train.data)[5]<-"BrandName"
-names(train.data)[6]<-"Param1"
-names(train.data)[7]<-"MaterialSize"
-names(train.data)[8]<-"Param2"
-names(train.data)[9]<-"Param3"
-names(train.data)[10]<-"Param4"
-names(train.data)[11]<-"Param5"
-names(train.data)[12]<-"MixProportion"
-head(train.data)
+# Change columns' name
+train.data = renameCols(train.data)
+test.data = renameCols(test.data)
 
-# in test data
-names(test.data)[1]<-"ProductNo"
-names(test.data)[2]<-"MaterialA"
-names(test.data)[3]<-"MaterialB"
-names(test.data)[4]<-"BrandName"
-names(test.data)[5]<-"Param1"
-names(test.data)[6]<-"MaterialSize"
-names(test.data)[7]<-"Param2"
-names(test.data)[8]<-"Param3"
-names(test.data)[9]<-"Param4"
-names(test.data)[10]<-"Param5"
-names(test.data)[11]<-"MixProportion"
-head(test.data)
-
-# check the unique items in dataset
-# in train data
-unique(train.data$ProductNo)
-unique(train.data$Label) 
-unique(train.data$MaterialA)
-unique(train.data$MaterialB)
-unique(train.data$BrandName)
-unique(train.data$Param1)
-unique(train.data$MaterialSize)
-unique(train.data$Param2)
-unique(train.data$Param3)
-unique(train.data$Param4)
-unique(train.data$Param5)
-unique(train.data$MixProportion)
-
-# in test data
-unique(test.data$ProductNo)
-unique(test.data$MaterialA)
-unique(test.data$MaterialB)
-unique(test.data$BrandName)
-unique(test.data$Param1)
-unique(test.data$MaterialSize)
-unique(test.data$Param2)
-unique(test.data$Param3)
-unique(test.data$Param4)
-unique(test.data$Param5)
-unique(test.data$MixProportion)
+# Check the unique items in dataset
+sapply(train.data, function(x) unique(x))
+sapply(test.data, function(x) unique(x))
 
 # convert all missing values into NAs in train and test data
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
@@ -95,6 +46,7 @@ test.data$ProductNo <- as.factor(test.data$ProductNo)
 test.data$MixProportion <- as.factor(test.data$MixProportion)
 
 # verify data
+
 unique(train.data$MaterialA)
 unique(train.data$MaterialB)
 unique(train.data$BrandName)
@@ -107,14 +59,11 @@ unique(test.data$BrandName)
 unique(test.data$MaterialSize)
 unique(test.data$MixProportion)
 
-length(which(train.data$MaterialA=="A1"))
-length(which(train.data$MaterialA=="A2"))
-length(which(train.data$MaterialA=="A3"))
-length(which(train.data$MaterialA=="A4"))
+str(train.data)
+str(test.data)
 
 ########### processing raw data ##########
 ##########################################
-
 
 ##########################################
 ########## handle missing values #########
@@ -139,7 +88,6 @@ sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
 new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
 
-
 # map mising values using the function
 ggplotMissingData(new.train.data)
 ggplotMissingData(new.test.data)
@@ -157,18 +105,15 @@ ggplotMissingData(new.test.data)
 # Process unmatched features between train and test sets
 new.train.data1 <- featureMatch(new.train.data)
 new.test.data1 <- featureMatch(new.test.data)
-str(new.train.data1)
-str(new.test.data1)
 
 # create dummies variables for categorical attributes
 processed.train = processNominalVars(new.train.data1)
 scaled.train = normalizeData(processed.train)
-str(scaled.train)
+summary(scaled.train)
 
 processed.test = processNominalVars(new.test.data1)
 scaled.test = normalizeData(processed.test)
-str(scaled.test)
-
+summary(scaled.test)
 
 
 # PARTITION FOR TRAINING DATA ONLY
@@ -222,6 +167,11 @@ plot(dl.model)
 dl.model.predict <- h2o.predict(dl.model, test.hex)
 dl.result <- as.data.frame(dl.model.predict)
 dl.result
+
+# Measure performance of H20 DL model
+perf <- h2o.performance(dl.model, test.hex)
+h2o.confusionMatrix(perf)
+
 h2o.shutdown()
 
 # examine the dl.result
@@ -340,7 +290,9 @@ com.table
 
 library(e1071)
 nb.classifier.data <- naiveBayes(Label~., data=scaled.train)
+
 nb.predict.data <- predict(nb.classifier.data, scaled.test, type="class")
+summary(nb.predict.data)
 
 # Percentage of good quality prediction
 length(which(nb.predict.data=="1"))*100/length(nb.predict.data)
