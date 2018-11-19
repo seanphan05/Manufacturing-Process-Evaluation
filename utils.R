@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 renameCols <- function(data) {
   names(data)[1]<-"ProductNo"
   names(data)[2]<-"Label"
@@ -35,7 +33,6 @@ factorData <- function(data) {
   
   return (data)
 }
->>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 
 factorMaterialA <- function(data) {
   labeled_data = factor(data, levels = c(
@@ -152,7 +149,6 @@ imputeMissingValues <- function(data) {
   return (new.data)
 }
 
-<<<<<<< HEAD
 featureMatch <- function(data)
 { # start featureMatch
   
@@ -211,6 +207,3 @@ normalizeData <- function(data) {
     summary(scaled.data)
     return (scaled.data) }
 }
-=======
-
->>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
