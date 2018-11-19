@@ -1,3 +1,41 @@
+<<<<<<< HEAD
+=======
+renameCols <- function(data) {
+  names(data)[1]<-"ProductNo"
+  names(data)[2]<-"Label"
+  names(data)[3]<-"MaterialA"
+  names(data)[4]<-"MaterialB"
+  names(data)[5]<-"BrandName"
+  names(data)[6]<-"Param1"
+  names(data)[7]<-"MaterialSize"
+  names(data)[8]<-"Param2"
+  names(data)[9]<-"Param3"
+  names(data)[10]<-"Param4"
+  names(data)[11]<-"Param5"
+  names(data)[12]<-"MixProportion"
+  head(data)
+  
+  return (data)
+}
+
+factorData <- function(data) {
+  data$MaterialA = factorMaterialA(data$MaterialA)
+  data$MaterialB = factorMaterialB(data$MaterialB)
+  data$BrandName = factorBrandName(data$BrandName)
+  data$MaterialSize = factorMaterialSize(data$MaterialSize)
+  data$MixProportion = ifelse(data$MixProportion=="", NA, data$MixProportion)
+  
+  # Set categorical attributes as factor for training data
+  data$ProductNo <- as.factor(data$ProductNo)
+  data$MaterialA <- as.factor(data$MaterialA)
+  data$MaterialB <- as.factor(data$MaterialB)
+  data$BrandName <- as.factor(data$BrandName)
+  data$MaterialSize <- as.factor(data$MaterialSize)
+  data$MixProportion <- as.factor(data$MixProportion)
+  
+  return (data)
+}
+>>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 
 factorMaterialA <- function(data) {
   labeled_data = factor(data, levels = c(
@@ -106,8 +144,6 @@ ggplotMissingData <- function(x){
 }
 
 imputeMissingValues <- function(data) {
-  #install.packages("missForest")
-  library(missForest)
   # exclude column ProductNo (product code is not a concerned variable)
   data.imp <- missForest(data[,!"ProductNo", with=FALSE])
   summary(data.imp)
@@ -116,6 +152,7 @@ imputeMissingValues <- function(data) {
   return (new.data)
 }
 
+<<<<<<< HEAD
 featureMatch <- function(data)
 { # start featureMatch
   
@@ -174,3 +211,6 @@ normalizeData <- function(data) {
     summary(scaled.data)
     return (scaled.data) }
 }
+=======
+
+>>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c

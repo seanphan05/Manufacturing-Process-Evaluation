@@ -1,6 +1,6 @@
 source("utils.R")
 
-# load dataset
+# Load datasets
 #install.packages("data.table")
 library(data.table)
 
@@ -13,54 +13,23 @@ head(test.data)
 
 #########################################
 ########## processing raw data ##########
-# remove blank colums
+
+# Remove blank columns
 train.data <- train.data[,(13:15):= NULL]
 
-# change parameters column' name
-# in train data
-names(train.data)[1]<-"ProductNo"
-names(train.data)[2]<-"Label"
-names(train.data)[3]<-"MaterialA"
-names(train.data)[4]<-"MaterialB"
-names(train.data)[5]<-"BrandName"
-names(train.data)[6]<-"Param1"
-names(train.data)[7]<-"MaterialSize"
-names(train.data)[8]<-"Param2"
-names(train.data)[9]<-"Param3"
-names(train.data)[10]<-"Param4"
-names(train.data)[11]<-"Param5"
-names(train.data)[12]<-"MixProportion"
-head(train.data)
+# Change columns' name
+train.data = renameCols(train.data)
+test.data = renameCols(test.data)
 
-# in test data
-names(test.data)[1]<-"ProductNo"
-names(test.data)[2]<-"MaterialA"
-names(test.data)[3]<-"MaterialB"
-names(test.data)[4]<-"BrandName"
-names(test.data)[5]<-"Param1"
-names(test.data)[6]<-"MaterialSize"
-names(test.data)[7]<-"Param2"
-names(test.data)[8]<-"Param3"
-names(test.data)[9]<-"Param4"
-names(test.data)[10]<-"Param5"
-names(test.data)[11]<-"MixProportion"
-head(test.data)
+# Check the unique items in dataset
+sapply(train.data, function(x) unique(x))
+sapply(test.data, function(x) unique(x))
 
-# check the unique items in dataset
-# in train data
-unique(train.data$ProductNo)
-unique(train.data$Label) 
-unique(train.data$MaterialA)
-unique(train.data$MaterialB)
-unique(train.data$BrandName)
-unique(train.data$Param1)
-unique(train.data$MaterialSize)
-unique(train.data$Param2)
-unique(train.data$Param3)
-unique(train.data$Param4)
-unique(train.data$Param5)
-unique(train.data$MixProportion)
+# Factor nominal variables
+train.data = factorData(train.data)
+test.data = factorData(test.data)                            
 
+<<<<<<< HEAD
 # in test data
 unique(test.data$ProductNo)
 unique(test.data$MaterialA)
@@ -96,6 +65,9 @@ train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$M
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
 
 # verify data
+=======
+# Verify data
+>>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 unique(train.data$MaterialA)
 unique(train.data$MaterialB)
 unique(train.data$BrandName)
@@ -108,25 +80,31 @@ unique(test.data$BrandName)
 unique(test.data$MaterialSize)
 unique(test.data$MixProportion)
 
-length(which(train.data$MaterialA=="A1"))
-length(which(train.data$MaterialA=="A2"))
-length(which(train.data$MaterialA=="A3"))
-length(which(train.data$MaterialA=="A4"))
+str(train.data)
+str(test.data)
 
 ########### processing raw data ##########
 ##########################################
 
-
 ##########################################
+<<<<<<< HEAD
 ########## handle missing values #########
 
 # ggplot_missing funtion to map missing values
+=======
+########## handle missing values ########## 
+
+
+# Use ggplot_missing funtion to map missing values
+>>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 #install.packages("reshape2")
 #install.packages("dplyr")
 #install.packages("ggplot2")
+#install.packages("missForest")
 library(reshape2)
 library(dplyr)
 library(ggplot2)
+library(missForest)
 
 # map mising values using the function
 ggplotMissingData(train.data)
@@ -161,6 +139,7 @@ processed.train = processNominalVars(new.train.data)
 scaled.train = normalizeData(processed.train)
 summary(scaled.train)
 
+<<<<<<< HEAD
 processed.test = processNominalVars(new.test.data)
 scaled.test = normalizeData(processed.test)
 summary(scaled.test)
@@ -170,7 +149,13 @@ summary(scaled.test)
 # PARTITION FOR TRAINING DATA ONLY
 # Split the training data into training set and testing set
 # install.packages("caret")
+=======
+# PARTITION TRAINING DATA
+# Split the training data into training and testing data
+#install.packages("caret")
+>>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 library(caret)
+
 # Set random seed for replication
 set.seed(200)
 # Lets do stratified sampling. Select rows to based on Class variable as strata
@@ -189,7 +174,7 @@ splited.train2 <- scaled.train[-TrainingDataIndex,]
 ##################################### Neural Network ########################################
 
 # Neural Network Model with h2o method
-# install.packages("h2o")
+install.packages("h2o")
 library(h2o)
 
 # Start up a 8-node H2O server on local machine, 
@@ -218,6 +203,11 @@ plot(dl.model)
 dl.model.predict <- h2o.predict(dl.model, test.hex)
 dl.result <- as.data.frame(dl.model.predict)
 dl.result
+
+# Measure performance of H20 DL model
+perf <- h2o.performance(dl.model, test.hex)
+h2o.confusionMatrix(perf)
+
 h2o.shutdown()
 
 # examine the dl.result
