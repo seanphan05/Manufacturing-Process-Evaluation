@@ -294,7 +294,7 @@ dt.accuracy
 
 # modeling the data with svm() 
 library(e1071)
-svm.classifier <- svm(Labels~.,data=splited.train1)
+svm.classifier <- svm(Label~.,data=splited.train1)
 
 # generate predictions for the testing dataset
 svm.predict <- predict(svm.classifier, splited.train2)
@@ -302,12 +302,12 @@ summary(svm.predict)
 
 # cross tabulation of predicted versus actual classes
 library(gmodels)
-CrossTable(splited.train2$Labels, svm.predict,
+CrossTable(splited.train2$Label, svm.predict,
            prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
            dnn = c('actual', 'predicted'))
 
 # accuracy
-table.svm <- table(splited.train2$Labels, svm.predict)
+table.svm <- table(splited.train2$Label, svm.predict)
 svm.accuracy = round(sum(diag(table.svm)/sum(table.svm)),digits=5)
 svm.accuracy
 ######################################## SVM ################################################
@@ -355,7 +355,7 @@ ggplotMissingData(test.data)
 sapply(train.data, function(x) sum(is.na(x)))
 
 # imputation for missing values
-new.test.data <- imputeMissingData(test.data)
+new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
 # map mising values using the function
 ggplot_missing(new.test.data)
