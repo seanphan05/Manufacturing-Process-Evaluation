@@ -29,15 +29,15 @@ sapply(test.data, function(x) unique(x))
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
 
-# convert all categorical columns into factors and create dummy variables
-# for training data set
+# Decode confidential datasets
+# for training data
 train.data$MaterialA = factorMaterialA(train.data$MaterialA)
 train.data$MaterialB = factorMaterialB(train.data$MaterialB)
 train.data$BrandName = factorBrandName(train.data$BrandName)
 train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
 train.data$ProductNo <- as.factor(train.data$ProductNo)
 train.data$MixProportion <- as.factor(train.data$MixProportion)
-# for testing data set
+# for testing data
 test.data$MaterialA = factorMaterialA(test.data$MaterialA)
 test.data$MaterialB = factorMaterialB(test.data$MaterialB)
 test.data$BrandName = factorBrandName(test.data$BrandName)
