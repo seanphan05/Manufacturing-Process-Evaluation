@@ -90,17 +90,16 @@ new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
 
 # Visualization for numberic features
-drawHistogram(new.train.data$Param1)
-drawHistogram(new.train.data$Param2)
-drawHistogram(new.train.data$Param3)
-drawHistogram(new.train.data$Param4)
-drawHistogram(new.train.data$Param5)
+valName <- names(new.train.data)
+drawHistogram(new.train.data$Param1, valName[6])
+drawHistogram(new.train.data$Param2, valName[8])
+drawHistogram(new.train.data$Param3, valName[9])
+drawHistogram(new.train.data$Param4, valName[10])
+drawHistogram(new.train.data$Param5, valName[11])
 
-plot(new.train.data$Param1)
-plot(new.train.data$Param2)
-plot(new.train.data$Param3)
-plot(new.train.data$Param4)
-plot(new.train.data$Param5)
+library(psych)
+cor(new.train.data[c("Param1", "Param2", "Param3", "Param4", "Param5")])
+pairs.panels(new.train.data[c("Param1", "Param2", "Param3", "Param4", "Param5")])
 
 # map mising values using the function
 ggplotMissingData(new.train.data)

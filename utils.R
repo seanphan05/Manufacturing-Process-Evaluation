@@ -1,4 +1,4 @@
-renameCols <- function(data) {
+renameTrainDataCols <- function(data) {
   names(data)[1]<-"ProductNo"
   names(data)[2]<-"Label"
   names(data)[3]<-"MaterialA"
@@ -16,25 +16,24 @@ renameCols <- function(data) {
   return (data)
 }
 
-factorData <- function(data) {
-  data$MaterialA = factorMaterialA(data$MaterialA)
-  data$MaterialB = factorMaterialB(data$MaterialB)
-  data$BrandName = factorBrandName(data$BrandName)
-  data$MaterialSize = factorMaterialSize(data$MaterialSize)
-  data$MixProportion = ifelse(data$MixProportion=="", NA, data$MixProportion)
-  
-  # Set categorical attributes as factor for training data
-  data$ProductNo <- as.factor(data$ProductNo)
-  data$MaterialA <- as.factor(data$MaterialA)
-  data$MaterialB <- as.factor(data$MaterialB)
-  data$BrandName <- as.factor(data$BrandName)
-  data$MaterialSize <- as.factor(data$MaterialSize)
-  data$MixProportion <- as.factor(data$MixProportion)
+renameTestDataCols <- function(data) {
+  names(data)[1]<-"ProductNo"
+  names(data)[2]<-"MaterialA"
+  names(data)[3]<-"MaterialB"
+  names(data)[4]<-"BrandName"
+  names(data)[5]<-"Param1"
+  names(data)[6]<-"MaterialSize"
+  names(data)[7]<-"Param2"
+  names(data)[8]<-"Param3"
+  names(data)[9]<-"Param4"
+  names(data)[10]<-"Param5"
+  names(data)[11]<-"MixProportion"
+  head(data)
   
   return (data)
 }
 
-factorMaterialA <- function(data) {
+labelMaterialA <- function(data) {
   labeled_data = factor(data, levels = c(
     "75a5f96063fbc3290b07b0e81c3249d0",
     "42a6854ae47630b3a32e84823d147e0b",
@@ -48,7 +47,7 @@ factorMaterialA <- function(data) {
   return(labeled_data)
 }
 
-factorMaterialB <- function(data) {
+labelMaterialB <- function(data) {
   labeled_data = factor(data, levels = c(
     "4610065df728e0bd399446ef5fd3ea74",
     "6fc672934f2f6e2a64898efd18c24111",
@@ -68,7 +67,7 @@ factorMaterialB <- function(data) {
   return (labeled_data)
 }
 
-factorBrandName <- function(data) {
+labelBrandName <- function(data) {
   labeled_data = factor(data, levels = c(
     "29f4d775d7fd37f40a72f66f39b7453f",
     "d69b8ab522882db30043159ad9918216"
@@ -79,7 +78,7 @@ factorBrandName <- function(data) {
   return (labeled_data)
 }
 
-factorMaterialSize <- function(data) {
+labelMaterialSize <- function(data) {
   labeled_data = factor(data, levels = c(
     "0.115*600",
     "0.115*720",
@@ -206,4 +205,14 @@ normalizeData <- function(data) {
     scaled.data <- data.frame(nom.test,data[,12:31])
     summary(scaled.data)
     return (scaled.data) }
+}
+
+drawHistogram <- function(data, valName) {
+  hist(
+    data,
+    main= paste("Histogram for", valName), 
+    xlab= valName, 
+    border="black", 
+    col="blue"
+  )
 }
