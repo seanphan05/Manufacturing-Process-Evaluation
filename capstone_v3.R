@@ -18,8 +18,8 @@ head(test.data)
 train.data <- train.data[,(13:15):= NULL]
 
 # Change columns' name
-train.data = renameCols(train.data)
-test.data = renameCols(test.data)
+train.data = renameTrainDataCols(train.data)
+test.data = renameTestDataCols(test.data)
 
 # Check the unique items in dataset
 sapply(train.data, function(x) unique(x))
@@ -29,24 +29,23 @@ sapply(test.data, function(x) unique(x))
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
 
-# Decode confidential datasets
-# for training data
-train.data$MaterialA = factorMaterialA(train.data$MaterialA)
-train.data$MaterialB = factorMaterialB(train.data$MaterialB)
-train.data$BrandName = factorBrandName(train.data$BrandName)
-train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
+# Convert all categorical columns into factors and create dummy variables
+# for training data set
+train.data$MaterialA = labelMaterialA(train.data$MaterialA)
+train.data$MaterialB = labelMaterialB(train.data$MaterialB)
+train.data$BrandName = labelBrandName(train.data$BrandName)
+train.data$MaterialSize = labelMaterialSize(train.data$MaterialSize)
 train.data$ProductNo <- as.factor(train.data$ProductNo)
 train.data$MixProportion <- as.factor(train.data$MixProportion)
-# for testing data
-test.data$MaterialA = factorMaterialA(test.data$MaterialA)
-test.data$MaterialB = factorMaterialB(test.data$MaterialB)
-test.data$BrandName = factorBrandName(test.data$BrandName)
-test.data$MaterialSize = factorMaterialSize(test.data$MaterialSize)
+# for testing data set
+test.data$MaterialA = labelMaterialA(test.data$MaterialA)
+test.data$MaterialB = labelMaterialB(test.data$MaterialB)
+test.data$BrandName = labelBrandName(test.data$BrandName)
+test.data$MaterialSize = labelMaterialSize(test.data$MaterialSize)
 test.data$ProductNo <- as.factor(test.data$ProductNo)
 test.data$MixProportion <- as.factor(test.data$MixProportion)
 
-# verify data
-
+# Verify data
 unique(train.data$MaterialA)
 unique(train.data$MaterialB)
 unique(train.data$BrandName)
@@ -68,25 +67,40 @@ str(test.data)
 ##########################################
 ########## handle missing values #########
 
-# ggplot_missing funtion to map missing values
+# Use ggplot_missing funtion to map missing values
 #install.packages("reshape2")
 #install.packages("dplyr")
 #install.packages("ggplot2")
+#install.packages("missForest")
 library(reshape2)
 library(dplyr)
 library(ggplot2)
+library(missForest)
 
-# map mising values using the function
+# Map mising values using the function
 ggplotMissingData(train.data)
 sapply(train.data, function(x) sum(is.na(x)))
 ggplotMissingData(test.data)
 sapply(test.data,function(x) sum(is.na(x)))
 
-# imputation for missing values
+# Imputation for missing values
 new.train.data <- imputeMissingValues(train.data)
 sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
 new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
+
+# Visualization for numberic features
+drawHistogram(new.train.data$Param1)
+drawHistogram(new.train.data$Param2)
+drawHistogram(new.train.data$Param3)
+drawHistogram(new.train.data$Param4)
+drawHistogram(new.train.data$Param5)
+
+plot(new.train.data$Param1)
+plot(new.train.data$Param2)
+plot(new.train.data$Param3)
+plot(new.train.data$Param4)
+plot(new.train.data$Param5)
 
 # map mising values using the function
 ggplotMissingData(new.train.data)
