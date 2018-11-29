@@ -33,24 +33,6 @@ renameTestDataCols <- function(data) {
   return (data)
 }
 
-factorData <- function(data) {
-  data$MaterialA = factorMaterialA(data$MaterialA)
-  data$MaterialB = factorMaterialB(data$MaterialB)
-  data$BrandName = factorBrandName(data$BrandName)
-  data$MaterialSize = factorMaterialSize(data$MaterialSize)
-  data$MixProportion = ifelse(data$MixProportion=="", NA, data$MixProportion)
-  
-  # Set categorical attributes as factor for training data
-  data$ProductNo <- as.factor(data$ProductNo)
-  data$MaterialA <- as.factor(data$MaterialA)
-  data$MaterialB <- as.factor(data$MaterialB)
-  data$BrandName <- as.factor(data$BrandName)
-  data$MaterialSize <- as.factor(data$MaterialSize)
-  data$MixProportion <- as.factor(data$MixProportion)
-  
-  return (data)
-}
-
 labelMaterialA <- function(data) {
   labeled_data = factor(data, levels = c(
     "75a5f96063fbc3290b07b0e81c3249d0",
@@ -225,12 +207,12 @@ normalizeData <- function(data) {
     return (scaled.data) }
 }
 
-drawHistogram <- function(data) {
+drawHistogram <- function(data, valName) {
   hist(
     data,
-    main="Histogram for Air Passengers", 
-    xlab= "Param1", 
+    main= paste("Histogram for", valName), 
+    xlab= valName, 
     border="black", 
-    col="blue",
+    col="blue"
   )
 }

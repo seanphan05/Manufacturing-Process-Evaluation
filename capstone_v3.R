@@ -61,6 +61,7 @@ unique(test.data$MixProportion)
 str(train.data)
 str(test.data)
 
+
 ########### processing raw data ##########
 ##########################################
 
@@ -90,17 +91,17 @@ new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
 
 # Visualization for numberic features
-drawHistogram(new.train.data$Param1)
-drawHistogram(new.train.data$Param2)
-drawHistogram(new.train.data$Param3)
-drawHistogram(new.train.data$Param4)
-drawHistogram(new.train.data$Param5)
+valName <- names(new.train.data)
+drawHistogram(new.train.data$Param1, valName[6])
+drawHistogram(new.train.data$Param2, valName[8])
+drawHistogram(new.train.data$Param3, valName[9])
+drawHistogram(new.train.data$Param4, valName[10])
+drawHistogram(new.train.data$Param5, valName[11])
 
-plot(new.train.data$Param1)
-plot(new.train.data$Param2)
-plot(new.train.data$Param3)
-plot(new.train.data$Param4)
-plot(new.train.data$Param5)
+install.packages("psych")
+library(psych)
+cor(new.train.data[c("Param1", "Param2", "Param3", "Param4", "Param5")])
+pairs.panels(new.train.data[c("Param1", "Param2", "Param3", "Param4", "Param5")])
 
 # map mising values using the function
 ggplotMissingData(new.train.data)
@@ -144,6 +145,18 @@ splited.train1 <- scaled.train[TrainingDataIndex,]
 splited.train2 <- scaled.train[-TrainingDataIndex,]
 # END: PARTITION FOR TRAINING DATA
 
+# Reduce dimension by performing PCA
+nomvars <- c(1, 7:26)
+colnames(splited.train1[,-nomvars])
+splited.train1.pca <- prcomp(splited.train1[,-nomvars], center = TRUE, scale. = TRUE)
+
+summary(splited.train1.pca)
+
+#install.packages("devtools")
+library(devtools)
+#install_github("vqv/ggbiplot")
+library(ggbiplot)
+ggbiplot(splited.train1.pca)
 
 ##################################### Data Preparation ######################################
 #############################################################################################
