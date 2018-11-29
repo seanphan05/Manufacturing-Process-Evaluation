@@ -18,56 +18,34 @@ head(test.data)
 train.data <- train.data[,(13:15):= NULL]
 
 # Change columns' name
-train.data = renameCols(train.data)
-test.data = renameCols(test.data)
+train.data = renameTrainDataCols(train.data)
+test.data = renameTestDataCols(test.data)
 
 # Check the unique items in dataset
 sapply(train.data, function(x) unique(x))
 sapply(test.data, function(x) unique(x))
 
-# Factor nominal variables
-train.data = factorData(train.data)
-test.data = factorData(test.data)                            
-
-<<<<<<< HEAD
-# in test data
-unique(test.data$ProductNo)
-unique(test.data$MaterialA)
-unique(test.data$MaterialB)
-unique(test.data$BrandName)
-unique(test.data$Param1)
-unique(test.data$MaterialSize)
-unique(test.data$Param2)
-unique(test.data$Param3)
-unique(test.data$Param4)
-unique(test.data$Param5)
-unique(test.data$MixProportion)
-
-
-# convert all categorical columns into factors and create dummy variables
-# for training data set
-train.data$MaterialA = factorMaterialA(train.data$MaterialA)
-train.data$MaterialB = factorMaterialB(train.data$MaterialB)
-train.data$BrandName = factorBrandName(train.data$BrandName)
-train.data$MaterialSize = factorMaterialSize(train.data$MaterialSize)
-train.data$ProductNo <- as.factor(train.data$ProductNo)
-train.data$MixProportion <- as.factor(train.data$MixProportion)
-# for testing data set
-test.data$MaterialA = factorMaterialA(test.data$MaterialA)
-test.data$MaterialB = factorMaterialB(test.data$MaterialB)
-test.data$BrandName = factorBrandName(test.data$BrandName)
-test.data$MaterialSize = factorMaterialSize(test.data$MaterialSize)
-test.data$ProductNo <- as.factor(test.data$ProductNo)
-test.data$MixProportion <- as.factor(test.data$MixProportion)
-
-# convert all missing values into NAs in training data
+# convert all missing values into NAs in train and test data
 train.data$MixProportion = ifelse(train.data$MixProportion=="", NA, train.data$MixProportion)
 test.data$MixProportion = ifelse(test.data$MixProportion=="", NA, test.data$MixProportion)
 
-# verify data
-=======
+# Convert all categorical columns into factors and create dummy variables
+# for training data set
+train.data$MaterialA = labelMaterialA(train.data$MaterialA)
+train.data$MaterialB = labelMaterialB(train.data$MaterialB)
+train.data$BrandName = labelBrandName(train.data$BrandName)
+train.data$MaterialSize = labelMaterialSize(train.data$MaterialSize)
+train.data$ProductNo <- as.factor(train.data$ProductNo)
+train.data$MixProportion <- as.factor(train.data$MixProportion)
+# for testing data set
+test.data$MaterialA = labelMaterialA(test.data$MaterialA)
+test.data$MaterialB = labelMaterialB(test.data$MaterialB)
+test.data$BrandName = labelBrandName(test.data$BrandName)
+test.data$MaterialSize = labelMaterialSize(test.data$MaterialSize)
+test.data$ProductNo <- as.factor(test.data$ProductNo)
+test.data$MixProportion <- as.factor(test.data$MixProportion)
+
 # Verify data
->>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 unique(train.data$MaterialA)
 unique(train.data$MaterialB)
 unique(train.data$BrandName)
@@ -87,16 +65,9 @@ str(test.data)
 ##########################################
 
 ##########################################
-<<<<<<< HEAD
 ########## handle missing values #########
 
-# ggplot_missing funtion to map missing values
-=======
-########## handle missing values ########## 
-
-
 # Use ggplot_missing funtion to map missing values
->>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 #install.packages("reshape2")
 #install.packages("dplyr")
 #install.packages("ggplot2")
@@ -106,18 +77,30 @@ library(dplyr)
 library(ggplot2)
 library(missForest)
 
-# map mising values using the function
+# Map mising values using the function
 ggplotMissingData(train.data)
 sapply(train.data, function(x) sum(is.na(x)))
 ggplotMissingData(test.data)
 sapply(test.data,function(x) sum(is.na(x)))
 
-# imputation for missing values
+# Imputation for missing values
 new.train.data <- imputeMissingValues(train.data)
 sapply(new.train.data, function(x) sum(is.na(x))) # recheck missing values
 new.test.data <- imputeMissingValues(test.data)
 sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
 
+# Visualization for numberic features
+drawHistogram(new.train.data$Param1)
+drawHistogram(new.train.data$Param2)
+drawHistogram(new.train.data$Param3)
+drawHistogram(new.train.data$Param4)
+drawHistogram(new.train.data$Param5)
+
+plot(new.train.data$Param1)
+plot(new.train.data$Param2)
+plot(new.train.data$Param3)
+plot(new.train.data$Param4)
+plot(new.train.data$Param5)
 
 # map mising values using the function
 ggplotMissingData(new.train.data)
@@ -133,29 +116,24 @@ ggplotMissingData(new.test.data)
 ###########################################################################################
 ################################### Data Preparation ######################################
 
-# create dummies variables for categorical attributes
+# Process unmatched features between train and test sets
+new.train.data1 <- featureMatch(new.train.data)
+new.test.data1 <- featureMatch(new.test.data)
 
-processed.train = processNominalVars(new.train.data)
+# create dummies variables for categorical attributes
+processed.train = processNominalVars(new.train.data1)
 scaled.train = normalizeData(processed.train)
 summary(scaled.train)
 
-<<<<<<< HEAD
-processed.test = processNominalVars(new.test.data)
+processed.test = processNominalVars(new.test.data1)
 scaled.test = normalizeData(processed.test)
 summary(scaled.test)
-
 
 
 # PARTITION FOR TRAINING DATA ONLY
 # Split the training data into training set and testing set
 # install.packages("caret")
-=======
-# PARTITION TRAINING DATA
-# Split the training data into training and testing data
-#install.packages("caret")
->>>>>>> cb01130ac75a9ae44afe69e1f93953564a12670c
 library(caret)
-
 # Set random seed for replication
 set.seed(200)
 # Lets do stratified sampling. Select rows to based on Class variable as strata
@@ -174,7 +152,7 @@ splited.train2 <- scaled.train[-TrainingDataIndex,]
 ##################################### Neural Network ########################################
 
 # Neural Network Model with h2o method
-install.packages("h2o")
+# install.packages("h2o")
 library(h2o)
 
 # Start up a 8-node H2O server on local machine, 
@@ -290,11 +268,7 @@ dt.accuracy
 ######################################## SVM ################################################
 # modeling the data with svm() 
 library(e1071)
-<<<<<<< HEAD
-svm.classifier <- svm(Label~.,data=splited.train1)
-=======
 svm.classifier <- svm(Label~.,data=splited.train1, scale=FALSE)
->>>>>>> 61404c07fef7ea12997343669d362550a880cac6
 
 # generate predictions for the testing dataset
 svm.predict <- predict(svm.classifier, splited.train2)
@@ -325,61 +299,13 @@ com.table
 #                                                               #
 #################################################################
 
-<<<<<<< HEAD
-# set categorical attributes as factor for training data
-test.data$ProductNo <- as.factor(test.data$ProductNo)
-test.data$MaterialA <- as.factor(test.data$MaterialA)
-test.data$MaterialB <- as.factor(test.data$MaterialB)
-test.data$BrandName <- as.factor(test.data$BrandName)
-test.data$MixProportion <- as.factor(test.data$MixProportion)
-
-# ggplot_missing funtion to map missing values
-library(reshape2)
-library(dplyr)
-library(ggplot2)
-ggplot_missing <- function(x){
-  x %>% is.na %>% melt %>% ggplot(data = ., aes(x = Var2, y = Var1)) +
-    geom_raster(aes(fill = value)) +
-    scale_fill_grey (name = '', labels = c('Present', 'Missing')) +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) +
-    labs(x = 'Variables on Dataset', y = 'Rows / Observations')
-}
-
-# map mising values using the function
-ggplotMissingData(test.data)
-sapply(test.data,function(x) sum(is.na(x)))
-
-# imputation for missing values
-# map mising values using the function
-ggplotMissingData(test.data)
-sapply(train.data, function(x) sum(is.na(x)))
-
-# imputation for missing values
-new.test.data <- imputeMissingValues(test.data)
-sapply(new.test.data, function(x) sum(is.na(x))) # recheck missing values
-# map mising values using the function
-ggplot_missing(new.test.data)
-
-##########################################################################################
-############################# Preparing testing data #####################################
-
-# create dummies variables for categorical attributes using one-hot encoding
-
-processed.test = processNominalVars(new.test.data)
-scaled.test.data = normalizeData(processed.test)
-summary(scaled.test.data)
-
-############################# Preparing testing data #####################################
-=======
->>>>>>> 61404c07fef7ea12997343669d362550a880cac6
 ##########################################################################################
 ######################### Apply Naive Bayes algorithm ####################################
 
 library(e1071)
-nb.classifier.data <- naiveBayes(scaled.train, scaled.train$Label)
+nb.classifier.data <- naiveBayes(Label~., data=scaled.train)
 
-nb.predict.data <- predict(nb.classifier.data, scaled.test)
+nb.predict.data <- predict(nb.classifier.data, scaled.test, type="class")
 summary(nb.predict.data)
 
 # Percentage of good quality prediction
@@ -407,6 +333,7 @@ dt.classifier.data <- C5.0(scaled.train[-1], scaled.train$Label)
 # generate predictions for the testing dataset
 dt.predict.data <- predict(dt.classifier.data, scaled.test)
 summary(dt.predict.data)
+
 # Percentage of good quality prediction
 length(which(dt.predict.data=="1"))*100/length(dt.predict.data)
 
@@ -425,8 +352,8 @@ splits <- h2o.splitFrame(train.hex, 0.8, seed=777)
 split.train  <- h2o.assign(splits[[1]], "train.hex") # 80%
 split.valid  <- h2o.assign(splits[[2]], "valid.hex") # 20%
 
-dl.model <- h2o.deeplearning(x=2:23,
-                             y="Labels",
+dl.model <- h2o.deeplearning(x=2:26,
+                             y="Label",
                              training_frame=split.train,
                              validation_frame=split.valid,
                              activation = "Tanh", 
@@ -441,3 +368,6 @@ h2o.shutdown()
 
 # examine the dl.result
 summary(dl.result.data)
+
+# Percentage of good quality prediction
+length(which(dl.result.data=="1"))*100/length(dt.predict.data)
