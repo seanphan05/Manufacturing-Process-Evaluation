@@ -233,7 +233,7 @@ splited.train2$Label <- factor(splited.train2$Label)
 
 # install.packages("e1071")
 library(e1071)
-nb.classifier <- naiveBayes(splited.train1, splited.train1$Label)
+nb.classifier<- naiveBayes(Label~., data=splited.train1)
 
 nb.predict <- predict(nb.classifier, splited.train2)
 head(nb.predict)
