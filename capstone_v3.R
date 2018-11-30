@@ -221,6 +221,9 @@ CrossTable(splited.train2$Label, dl.result$predict,
 table.NN <- table(splited.train2$Label, dl.result$predict)
 nn.accuracy = round(sum(diag(table.NN)/sum(table.NN)),digits=5)
 nn.accuracy
+# Sensitivity
+nn.sensitivity = round(table.NN[4]/sum(table.NN[3:4]),digits=5)
+nn.sensitivity
 
 ##################################### Neural Network ########################################
 #############################################################################################
@@ -240,14 +243,17 @@ head(nb.predict)
 
 # Confusion Matrix
 library(gmodels)
-CrossTable(nb.predict, splited.train2$Label,
+CrossTable( splited.train2$Label, nb.predict,
            prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE,
-           dnn = c('predicted', 'actual'))
+           dnn = c('actual', 'predict'))
 
 # accuracy
 table.NB <- table(splited.train2$Label, nb.predict)
 nb.accuracy = round(sum(diag(table.NB)/sum(table.NB)),digits=5)
 nb.accuracy
+# Sensitivity
+nn.sensitivity = round(table.NB[4]/sum(table.NB[3:4]),digits=5)
+nn.sensitivity
 
 ###################################### Naive Bayes ##########################################
 #############################################################################################
@@ -273,6 +279,9 @@ CrossTable(splited.train2$Label, dt.predict,
 table.DT <- table(splited.train2$Label, dt.predict)
 dt.accuracy = round(sum(diag(table.DT)/sum(table.DT)),digits=5)
 dt.accuracy
+# Sensitivity
+nn.sensitivity = round(table.DT[4]/sum(table.DT[3:4]),digits=5)
+nn.sensitivity
 
 #################################### Decision Tree ##########################################
 #############################################################################################
@@ -297,6 +306,10 @@ CrossTable(splited.train2$Label, svm.predict,
 table.svm <- table(splited.train2$Label, svm.predict)
 svm.accuracy = round(sum(diag(table.svm)/sum(table.svm)),digits=5)
 svm.accuracy
+# Sensitivity
+nn.sensitivity = round(table.svm[4]/sum(table.svm[3:4]),digits=5)
+nn.sensitivity
+
 ######################################## SVM ################################################
 #############################################################################################
 
