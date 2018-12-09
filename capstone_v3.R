@@ -197,6 +197,7 @@ library(e1071)
 svm.classifier <- svm(Label~.,data=splited.train1, scale=FALSE)
 svm.predict <- predict(svm.classifier, splited.train2)
 summary(svm.predict)
+
 # cross tabulation of predicted versus actual classes
 library(gmodels)
 CrossTable(splited.train2$Label, svm.predict,
@@ -270,3 +271,23 @@ h2o.shutdown()
 summary(dl.result.data)
 # Percentage of good quality prediction
 length(which(dl.result.data=="1"))*100/length(dt.predict.data)
+
+## Improvement:
+# Naive Bayes
+library(e1071)
+new.train.data1$Label <- factor(new.train.data1$Label)
+im.nb.classifier <- naiveBayes(Label~., data=new.train.data1)
+im.nb.predict <- predict(im.nb.classifier, new.test.data1, type="class")
+summary(im.nb.predict)
+# Percentage of good quality prediction
+length(which(im.nb.predict=="1"))*100/length(im.nb.predict)
+
+# svm method:
+library(e1071)
+im.svm.classifier <- svm(Label~.,data=scaled.train, scale=FALSE, kernel="radial", cost=10, gamma=8)
+im.svm.predict <- predict(im.svm.classifier, scaled.test)
+summary(im.svm.predict)
+# Percentage of good quality prediction
+length(which(im.svm.predict=="1"))*100/length(im.svm.predict)
+
+
